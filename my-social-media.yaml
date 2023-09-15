@@ -1,0 +1,1682 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: My Social Media API
+  # description:
+servers:
+  - description: Dev
+    url: 'http://localhost:8000/api/v1'
+tags:
+  - name: Auth
+    description: Authentication Endpoint
+  - name: Post
+    description: Post Endpoints (public + private)
+  - name: Like
+    description: Like Endpoint (public + private)
+  - name: Comment
+    description: Comment Endpoint (public + private)
+  - name: Follow
+    description: Follow Endpoint (public + private)
+  - name: User
+    description: User Endpoints (public + admin)
+paths:
+  '/auth/register':
+    post:
+      description: Create a new account
+      tags: [Auth]
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Prantik Noor
+                email:
+                  type: string
+                  format: email
+                  example: prantik@gmail.com
+                password:
+                  type: string
+                  format: password
+                  example: P@ssword123
+              required: [name, email, password]
+      responses:
+        '201':
+          description: Registration successful
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: Registration successful
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        example: 'access_32rnstUNOirsent321einrtonretsnao'
+                      refresh_token:
+                        type: string
+                        example: 'refresh_rnstUNOirsent321einrtonretsnao'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: '/auth/register'
+                      login:
+                        type: string
+                        example: '/auth/login'
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  '/auth/login':
+    post:
+      description: Login to your account
+      tags: [Auth]
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: prantik@gmail.com
+                password:
+                  type: string
+                  format: password
+                  example: P@ssword123
+              required: [email, password]
+      responses:
+        '200':
+          description: Login successful
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: Login successful
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        example: 'access_32rnstUNOirsent321einrtonretsnao'
+                      refresh_token:
+                        type: string
+                        example: 'refresh_rnstUNOirsent321einrtonretsnao'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: '/auth/login'
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  '/auth/refresh':
+    post:
+      description: Get a new access token via refresh token
+      tags: [Auth]
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+                  example: 'refresh_rnstUNOirsent321einrtonretsnao'
+              required: [refreshToken]
+      responses:
+        '201':
+          description: Successfully generated a new access token
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: Access token was generated successfully
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        example: 'access_32rnstUNOirsent321einrtonretsnao'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: '/auth/refresh'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+  '/posts':
+    get:
+      tags: [Post]
+      description: Retrieve all posts
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/sortTypeParam'
+        - $ref: '#/components/parameters/sortByParam'
+        - $ref: '#/components/parameters/searchParam'
+      responses:
+        '200':
+          description: Return a list of posts
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - type: object
+                          properties:
+                            id:
+                              type: integer
+                              format: int32
+                              example: 1
+                            body:
+                              type: string
+                              example: The post body
+                            photo:
+                              type: string
+                              format: url
+                              example: http://cdn.prantik.com/resnti.jpg
+                            creator:
+                              $ref: '#/components/schemas/CreatorDTO'
+                            likes:
+                              type: integer
+                              format: int32
+                              example: 100
+                            comments:
+                              type: integer
+                              format: int32
+                              example: 15  
+                            link:
+                              type: string
+                              format: url
+                              example: '/posts/1'
+                          required: [id, body, creator, likes, comments]
+                        - $ref: '#/components/schemas/Timestamp'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: '/posts?page=2&limit=10'
+                      next:
+                        type: string
+                        format: url
+                        example: '/posts?page=3&limit=10'
+                      prev:
+                        type: string
+                        format: url
+                        example: '/posts?page=1&limit=10'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      operationId: createPost
+      security:
+        - bearerAuth: []
+      tags: [Post]
+      requestBody:
+        description: To create a new post, user must need to provide valid data
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+                  format: text
+                  example: A new post
+                photo:
+                  type: string
+                  format: url
+                  example: https://cdn.prantik.com/photo.png
+                audience:
+                  type: string
+                  enum: [everyone, public, only_me]
+                  example: everyone
+                commenting:
+                  type: boolean
+                  example: true
+              required: [body]
+      responses:
+        '201':
+          description: Successfully created a new post
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/PostCreateDTO'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+  '/posts/{id}':
+    get:
+      tags: [Post]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+        - in: query
+          name: expand
+          description: expand creator, likes, and comments object
+          schema:
+            type: string
+            example: 'creator,likes,comments'
+      description: Get a single post
+      responses:
+        '200':
+          description: Return a single post
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    allOf:
+                      - $ref: '#/components/schemas/Post'
+                      - type: object
+                        properties:
+                          creator:
+                            $ref: '#/components/schemas/CreatorDTO'
+                          likes:
+                            type: integer
+                            format: int32
+                            example: 100
+                          comments:
+                            type: integer
+                            format: int32
+                            example: 15
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: '/posts/1'
+                      creator:
+                        type: string
+                        format: url
+                        example: '/users/1'
+                      likes:
+                        type: string
+                        format: url
+                        example: '/posts/1/likes'
+                      comments:
+                        type: string
+                        format: url
+                        example: '/posts/1/comments'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'              
+    put:
+      tags: [Post]
+      description: Update or create an entire post
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int32
+                  example: 1
+                body:
+                  type: string
+                  format: text
+                  example: A new post
+                photo:
+                  type: string
+                  format: url
+                  example: https://cdn.prantik.com/photo.png
+                audience:
+                  type: string
+                  enum: [everyone, public, only_me]
+                  example: everyone
+                commenting:
+                  type: boolean
+                  example: true
+              required: [body]
+      responses:
+        '200':
+          description: Successfully Updated
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/PostUpdateDTO'
+        '201':
+          description: Successfully Created
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/PostCreateDTO'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+    patch:
+      tags: [Post]
+      description: Partially update a post
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+                  format: text
+                  example: A new post
+                photo:
+                  type: string
+                  format: url
+                  example: https://cdn.prantik.com/photo.png
+                audience:
+                  type: string
+                  enum: [everyone, public, only_me]
+                  example: everyone
+                commenting:
+                  type: boolean
+                  example: true
+      responses:
+        '200':
+          description: Successfully Updated
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/PostUpdateDTO'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      tags: [Post]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      responses:
+        '204':
+          description: 'Successfully deleted'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/posts/{id}/likes':
+    get:
+      tags: [Like]
+      description: Retrieve all comments
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/sortTypeParam'
+        - $ref: '#/components/parameters/sortByParam'
+      responses:
+        '200':
+          description: Return a list of likes
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: '#/components/schemas/Like'
+                        - type: object
+                          properties:
+                            liker:
+                              $ref: '#/components/schemas/CreatorDTO'
+                          required: [liker]
+                        - $ref: '#/components/schemas/Timestamp'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: '/post/1/likes?page=2&limit=10'
+                      next:
+                        type: string
+                        format: url
+                        example: '/post/1/likes?page=3&limit=10'
+                      prev:
+                        type: string
+                        format: url
+                        example: '/post/1/likes?page=1&limit=10'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      tags: [Like]
+      security:
+        - bearerAuth: []
+      description: Like a post
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      responses:
+        '201':
+          description: Successfully liked the post
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Like'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: '/posts/1/likes'
+    delete:
+      tags: [Like]
+      security:
+        - bearerAuth: []
+      description: Unlike a post
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      responses:
+        '204':
+          description: 'Successfully deleted'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/comments':
+    get:
+      tags: [Comment]
+      description: Retrieve all comments
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/sortTypeParam'
+        - $ref: '#/components/parameters/sortByParam'
+        - $ref: '#/components/parameters/searchParam'
+      responses:
+        '200':
+          description: Return a list of comments
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: OK
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: '#/components/schemas/Comment'
+                        - type: object
+                          properties:
+                            commentor:
+                              $ref: '#/components/schemas/CreatorDTO'
+                            link:
+                              type: string
+                              format: url
+                              example: '/comments/1'
+                          required: [id, body, commentor, postId]
+                        - $ref: '#/components/schemas/Timestamp'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: '/comments?page=2&limit=10'
+                      next:
+                        type: string
+                        format: url
+                        example: '/comments?page=3&limit=10'
+                      prev:
+                        type: string
+                        format: url
+                        example: '/comments?page=1&limit=10'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      operationId: createComment
+      security:
+        - bearerAuth: []
+      tags: [Comment]
+      requestBody:
+        description: To create a new comment, user must need to provide valid data
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+                  example: A new comment
+                postId:
+                  type: integer
+                  format: int32
+                  example: 1
+              required: [body, postId]
+      responses:
+        '201':
+          description: Successfully created a new comment
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/CommentCreateDTO'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+  '/posts/{id}/comments':
+    get:
+      tags: [Comment]
+      description: Retrieve all comments of a post
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/sortTypeParam'
+        - $ref: '#/components/parameters/sortByParam'
+        - $ref: '#/components/parameters/searchParam'
+      responses:
+        '200':
+          description: Return a list of comments
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: OK
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: '#/components/schemas/Comment'
+                        - type: object
+                          properties:
+                            commentor:
+                              $ref: '#/components/schemas/CreatorDTO'
+                            link:
+                              type: string
+                              format: url
+                              example: '/comments/1'
+                          required: [id, body, commentor, postId]
+                        - $ref: '#/components/schemas/Timestamp'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: '/comments?page=2&limit=10'
+                      next:
+                        type: string
+                        format: url
+                        example: '/comments?page=3&limit=10'
+                      prev:
+                        type: string
+                        format: url
+                        example: '/comments?page=1&limit=10'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      operationId: createCommentOfPost
+      security:
+        - bearerAuth: []
+      tags: [Comment]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      requestBody:
+        description: To create a new comment, user must need to provide valid data
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+                  example: A new comment
+              required: [body, postId]
+      responses:
+        '201':
+          description: Successfully created a new comment
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/CommentCreateDTO'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+  '/comments/{id}':
+    get:
+      tags: [Comment]
+      description: Retrieve all comments
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      responses:
+        '200':
+          description: Return a comment
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    allOf:
+                      - type: object
+                        properties:
+                          id:
+                            type: integer
+                            format: int32
+                            example: 1
+                          body:
+                            type: string
+                            example: The comment body
+                          postId:
+                            type: integer
+                            format: int32
+                            example: 1
+                          commentor:
+                            $ref: '#/components/schemas/CreatorDTO'
+                        required: [id, body, commentor, postId]
+                      - $ref: '#/components/schemas/Timestamp'
+                  
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: '/comments/1'
+                      post:
+                        type: string
+                        format: url
+                        example: '/posts/1'
+                      commentor:
+                        type: string
+                        format: url
+                        example: '/users/1'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    patch:
+      tags: [Comment]
+      description: Partially update a comment
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+                  format: text
+                  example: A updated comment
+                status:
+                  type: string
+                  enum: [public, hidden]
+                  example: hidden
+      responses:
+        '200':
+          description: Successfully Updated
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/CommentUpdateDTO'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      tags: [Comment]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      responses:
+        '204':
+          description: 'Successfully deleted'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/users':
+    get:
+      tags: [User]
+      description: Retrieve all users
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/sortTypeParam'
+        - $ref: '#/components/parameters/sortByParam'
+        - $ref: '#/components/parameters/searchParam'
+      responses:
+        '200':
+          description: Return a list of users
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: '#/components/schemas/User'
+                        - type: object
+                          properties:
+                            links:
+                              type: object
+                              properties:
+                                posts:
+                                  type: string
+                                  format: url
+                                  example: '/posts?user=1'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: '/posts?page=2&limit=10'
+                      next:
+                        type: string
+                        format: url
+                        example: '/posts?page=3&limit=10'
+                      prev:
+                        type: string
+                        format: url
+                        example: '/posts?page=1&limit=10'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      operationId: createUser
+      security:
+        - bearerAuth: []
+      tags: [User]
+      requestBody:
+        description: To create a new user, must need to provide valid data
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Mahathiur Xiam
+                email:
+                  type: string
+                  format: email
+                  example: xiam@gmail.com
+                password:
+                  type: string
+                  format: password
+                  example: P@ssword123
+                bio:
+                  type: string
+                  format: text
+                  example: It is my bio
+                role:
+                  type: string
+                  enum: [user, admin]
+                  example: user
+                status:
+                  type: string
+                  enum: [unverified, verified, banned]
+                  example: unverified
+              required: [name, email, password]
+      responses:
+        '201':
+          description: Successfully created a new user
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/UserCreateDTO'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+  '/users/{id}':
+    get:
+      tags: [User]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+        - in: query
+          name: expand
+          description: expand followers, followees
+          schema:
+            type: string
+            example: 'followers,followees'
+      description: Get a single user
+      responses:
+        '200':
+          description: Return a single user
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  data:
+                    allOf:
+                      - $ref: '#/components/schemas/User'
+                      - type: object
+                        properties:
+                          followers:
+                            type: integer
+                            format: int32
+                            example: 102
+                          followees:
+                            type: integer
+                            format: int32
+                            example: 83
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: '/posts/1'
+                      creator:
+                        type: string
+                        format: url
+                        example: '/users/1'
+                      likes:
+                        type: string
+                        format: url
+                        example: '/posts/1/likes'
+                      comments:
+                        type: string
+                        format: url
+                        example: '/posts/1/comments'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'              
+    put:
+      tags: [User]
+      description: Update or create an entire user
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Mahathiur Xiam
+                email:
+                  type: string
+                  format: email
+                  example: xiam@gmail.com
+                password:
+                  type: string
+                  format: password
+                  example: P@ssword123
+                bio:
+                  type: string
+                  format: text
+                  example: It is my bio
+                role:
+                  type: string
+                  enum: [user, admin]
+                  example: user
+                status:
+                  type: string
+                  enum: [unverified, verified, banned]
+                  example: unverified
+              required: [name, email, password]
+      responses:
+        '200':
+          description: Successfully Updated
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/UserUpdateDTO'
+        '201':
+          description: Successfully Created
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/UserCreateDTO'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+    patch:
+      tags: [User]
+      description: Update a user partially
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Mahathiur Xiam
+                email:
+                  type: string
+                  format: email
+                  example: xiam@gmail.com
+                password:
+                  type: string
+                  format: password
+                  example: P@ssword123
+                bio:
+                  type: string
+                  format: text
+                  example: It is my bio
+                role:
+                  type: string
+                  enum: [user, admin]
+                  example: user
+                status:
+                  type: string
+                  enum: [unverified, verified, banned]
+                  example: unverified
+      responses:
+        '200':
+          description: Successfully Updated
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/UserUpdateDTO'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      tags: [User]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      responses:
+        '204':
+          description: 'Successfully deleted'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/users/{id}/follow':
+    post:
+      tags: [Follow]
+      security:
+        - bearerAuth: []
+      description: Follow a user
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      responses:
+        '201':
+          description: Successfully followed a user
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: Successfully followed the user
+                  data:
+                    $ref: '#/components/schemas/Follower'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: '/users/1/follow'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/users/{id}/unfollow':
+    post:
+      tags: [Follow]
+      security:
+        - bearerAuth: []
+      description: Follow a user
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      responses:
+        '204':
+          description: Successfully unfollowed a user
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Post:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+              example: 1
+            body:
+              type: string
+              format: text
+              example: The body of a post
+            photo:
+              type: string
+              format: url
+              example: https://cdn.prantik.com/photo.jpg
+            creatorId:
+              type: integer
+              format: int32
+              example: 1
+            commenting:
+              type: boolean
+              example: true
+            audience:
+              type: string
+              enum: ['everyone', 'public', 'only_me']
+              example: everyone
+          required: [id, body, creatorId, commenting, audience]
+        - $ref: '#/components/schemas/Timestamp'
+    User:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+              example: 1
+            name:
+              type: string
+              example: Prantik
+            bio:
+              type: string
+              example: A backend developer
+            password:
+              type: string
+              format: hashed
+            role:
+              type: string
+              enum: [user, admin]
+              example: user
+            status:
+              type: string
+              enum: [unverified, verified, banned]
+              example: unverified
+          required: [id, name, password, role, status]
+        - $ref: '#/components/schemas/Timestamp'
+    Like:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+              example: 1
+            likerId:
+              type: integer
+              format: int32
+              example: 1
+            postId:
+              type: integer
+              format: int32
+              example: 1
+          required: [id, likerId, postId]
+        - $ref: '#/components/schemas/Timestamp'
+    Comment:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+              example: 1
+            body:
+              type: string
+              example: It is a comment
+            commentorId:
+              type: integer
+              format: int32
+              example: 1
+            postId:
+              type: integer
+              format: int32
+              example: 1
+            status:
+              type: string
+              enum: [public, hidden]
+              example: hidden
+          required: [id, body, commentorId, postId, status]
+        - $ref: '#/components/schemas/Timestamp'
+    Follower:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+              example: 1
+            followerId:
+              type: integer
+              format: int32
+              example: 1
+            followeeId:
+              type: integer
+              format: int32
+              example: 1
+          required: [id, followerId, followeeId]
+        - $ref: '#/components/schemas/Timestamp'
+    PostCreateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 201
+        message:
+          type: string
+          example: "Post created successfully"
+        data:
+          $ref: '#/components/schemas/Post'
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: url
+              example: '/posts/1'
+            creator:
+              type: string
+              format: url
+              example: '/users/1'
+            likes:
+              type: string
+              format: url
+              example: '/posts/1/likes'
+            comments:
+              type: string
+              format: url
+              example: '/posts/1/comments'
+      required: [code, message, data, links]
+    PostUpdateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          type: string
+          example: Post updated successfully
+        data:
+          $ref: '#/components/schemas/Post'
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: url
+              example: '/posts/1'
+            creator:
+              type: string
+              format: url
+              example: '/users/1'
+            likes:
+              type: string
+              format: url
+              example: '/posts/1/likes'
+            comments:
+              type: string
+              format: url
+              example: '/posts/1/comments'
+      required: [code, message, data, links]
+    CreatorDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 1
+        name:
+          type: string
+          example: Prantik Noor
+      required: [id, name]
+    CommentCreateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 201
+        message:
+          type: string
+          example: "Comment created successfully"
+        data:
+          allOf:
+            - $ref: '#/components/schemas/Comment'
+            - type: object
+              properties:
+                commentor:
+                  $ref: '#/components/schemas/CreatorDTO'
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: url
+              example: '/comments/1'
+            commentor:
+              type: string
+              format: url
+              example: '/users/1'
+            post:
+              type: string
+              format: url
+              example: '/posts/1'
+      required: [code, message, data, links]
+    CommentUpdateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          type: string
+          example: "Comment updated successfully"
+        data:
+          allOf:
+            - $ref: '#/components/schemas/Comment'
+            - type: object
+              properties:
+                commentor:
+                  $ref: '#/components/schemas/CreatorDTO'
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: url
+              example: '/comments/1'
+            commentor:
+              type: string
+              format: url
+              example: '/users/1'
+            post:
+              type: string
+              format: url
+              example: '/posts/1'
+      required: [code, message, data, links]
+    UserCreateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 201
+        message:
+          type: string
+          example: "User created successfully"
+        data:
+          $ref: '#/components/schemas/User'
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: url
+              example: '/users'
+            view:
+              type: string
+              format: url
+              example: '/users/1'
+            edit:
+              type: string
+              format: url
+              example: '/users/1'
+            delete:
+              type: string
+              format: url
+              example: '/users/1'
+      required: [code, message, data, links]
+    UserUpdateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          type: string
+          example: "User updated successfully"
+        data:
+          $ref: '#/components/schemas/User'
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: url
+              example: '/users'
+            view:
+              type: string
+              format: url
+              example: '/users/1'
+            edit:
+              type: string
+              format: url
+              example: '/users/1'
+            delete:
+              type: string
+              format: url
+              example: '/users/1'
+      required: [code, message, data, links]
+    Timestamp:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: datetime
+          example: '2023-09-11T05:35:12.075Z'
+        updatedAt:
+          type: string
+          format: datetime
+          example: '2023-09-11T05:35:48.699Z'
+      required: [createdAt, updatedAt]
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+          example: 2
+        next:
+          type: integer
+          format: int32
+          example: 3
+        prev:
+          type: integer
+          format: int32
+          example: 1
+        limit:
+          type: integer
+          format: int32
+          example: 10
+        totalPage:
+          type: integer
+          format: int32
+          example: 5
+        totalItems:
+          type: integer
+          format: int32
+          example: 50
+      required:
+        - page
+        - limit
+        - totalPage
+        - totalItems
+  responses:
+    '500':
+      description: Internal Server Error
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 500
+              error:
+                type: string
+                example: Internal Server Error
+              message:
+                type: string
+                example: Something went wrong!
+    '400':
+      description: Bad Request
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 400
+              error:
+                type: string
+                example: Bad Request
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                      example: email
+                    message:
+                      type: string
+                      example: Invalid email
+                    in:
+                      type: string
+                      enum: [query, body]
+                      example: body
+    '401':
+      description: Unauthorized
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 401
+              error:
+                type: string
+                example: Unauthorized
+              message:
+                type: string
+                example: You don't have the right permission
+    '404':
+      description: Resource Not Found
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 404
+              error:
+                type: string
+                example: Resource Not Found
+              message:
+                type: string
+                example: Requested resource not found
+  parameters:
+    pageParam:
+      in: query
+      name: page
+      description: current page number
+      required: true
+      schema:
+        type: integer
+        format: int32
+        example: 2
+    limitParam:
+      in: query
+      name: limit
+      description: maximum items to be returned
+      required: true
+      schema:
+        type: integer
+        format: int32
+        example: 10
+    sortTypeParam:
+      in: query
+      name: sort_type
+      description: type of sort (asc or desc)
+      schema:
+        type: string
+        enum: [asc, desc]
+        example: desc
+    sortByParam:
+      in: query
+      name: sort_by
+      description: Sort key
+      schema:
+        type: string
+        example: updatedAt
+    searchParam:
+      in: query
+      name: search
+      description: Search term
+      schema:
+        type: string
+        example: james web telescope
+    idPathParam:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: string
+        example: "32da98887ab23423"
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
