@@ -1,13 +1,12 @@
 const { createUser, deleteUser, findSingleUser, findAllUser, updateOrCreateUser, updateUser } = require('../../../lib/user')
 const { connectDB } = require('../../../db')
 const { User } = require('../../../models')
-const { faker } = require('@faker-js/faker');
 const { notFound } = require('../../../utils/httpErrors');
 const mongoose = require('mongoose');
+const { getFakeUserCreationData, createRandomUser } = require('../../helpers');
 
 beforeAll(async () => {
     await connectDB(true)
-    await User.deleteMany()
 })
 
 afterAll(async () => {
@@ -17,25 +16,12 @@ afterAll(async () => {
 
 const randomId = '65030d3e564c9ce90103244c'
 
-const getFakeUserCreationData = () => ({
-    name: faker.person.fullName(),
-    email: faker.internet.email(),
-    password: faker.internet.password(),
-    bio: faker.lorem.paragraph()
-})
-
-const createRandomUser = async () => {
-    const data = getFakeUserCreationData()
-
-    const user = await createUser(data)
-
-    return { data, user }
-}
-
 describe('USER', () => {
     describe('User creation', () => {
         it('should create an user and return with same data', async () => {
-            const { data, user } = await createRandomUser()
+            const data = getFakeUserCreationData()
+
+            const user = await createUser(data)
 
             expect(user.name).toBe(data.name)
             expect(user.email).toBe(data.email)
