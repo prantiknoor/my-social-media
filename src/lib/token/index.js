@@ -18,7 +18,6 @@ const verifyToken = ({
     try {
         return jwt.verify(token, secret, { algorithms: [algorithm] })
     } catch (error) {
-        console.log(error);
         if (error.name === 'TokenExpiredError') {
             throw authenticationError('Token expired. Please log in again.')
         } else {
