@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const { badRequest } = require('../../../utils/httpErrors')
 const { connectDB } = require('../../../db')
 const { getFakeUserCreationData, createRandomUser } = require('../../helpers')
-const { register } = require('../../../lib/auth')
+const { register, login } = require('../../../lib/auth')
 const { User } = require('../../../models')
 
 beforeAll(async () => {
@@ -33,11 +33,36 @@ describe('Authentication', () => {
         it('should throw badRequest error because user already exist with the email', async () => {
             const { user } = await createRandomUser()
 
-            expect(register({
+            return expect(register({
                 name: 'Prantik',
                 email: user.email,
                 password: 'password123'
             })).rejects.toThrow(badRequest('User already exist.'))
+        })
+    })
+
+    describe('Login', () => {
+        it('should throw badRequest error for user not found by the email', () => {
+            const email = 'hello123@gmail.com'
+            const password = 'helloq234'
+
+            return expect(login({ email, password })).rejects.toThrow(badRequest('Invalid credentials'))
+        })
+
+        it('should throw badRequest error for password doesn\'t match', async () => {
+            const { data: { email } } = await createRandomUser()
+            const password = 'helloq234'
+
+            return expect(login({ email, password })).rejects.toThrow(badRequest('Invalid credentials'))
+        })
+
+        it('should log in successfully and return access token', async () => {
+            const { name, email, password } = getFakeUserCreationData()
+            await register({ name, email, password })
+
+            const token = await login({ email, password })
+
+            expect(token.length).toBeGreaterThan(60)
         })
     })
 })
