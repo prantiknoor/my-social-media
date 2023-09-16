@@ -1,7 +1,6 @@
 const { badRequest } = require("../../utils/httpErrors")
 const { createUser, findUserByEmail } = require("../user")
-const { generateHash } = require('../../utils/hashing')
-const { generateToken } = require('../../lib/token')
+const { generateHash, hashMatched } = require('../../utils/hashing')
 const { generateAccessTokenFromUser } = require("./utils")
 
 const register = async ({ name, email, password }) => {
@@ -22,4 +21,19 @@ const register = async ({ name, email, password }) => {
     return { user: user._doc, token }
 }
 
-module.exports = { register }
+const login = async ({ email, password }) => {
+    const user = await findUserByEmail(email)
+
+    if (!user) throw badRequest('Invalid credentials')
+
+    // password validation
+    const matched = await hashMatched(password, user.password)
+
+    if (!matched) throw badRequest('Invalid credentials')
+
+    const token = generateAccessTokenFromUser(user)
+
+    return token
+}
+
+module.exports = { register, login }
