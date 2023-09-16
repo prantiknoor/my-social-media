@@ -5,7 +5,7 @@ info:
   # description:
 servers:
   - description: Dev
-    url: 'http://localhost:8000/api/v1'
+    url: "http://localhost:8000/api/v1"
 tags:
   - name: Auth
     description: Authentication Endpoint
@@ -16,17 +16,17 @@ tags:
   - name: Comment
     description: Comment Endpoint (public + private)
   - name: Follow
-    description: Follow Endpoint (public + private)
+    description: Follow Endpoint (private)
   - name: User
     description: User Endpoints (public + admin)
 paths:
-  '/auth/register':
+  "/auth/register":
     post:
       description: Create a new account
       tags: [Auth]
       requestBody:
         content:
-          'application/json':
+          "application/json":
             schema:
               type: object
               properties:
@@ -43,10 +43,10 @@ paths:
                   example: P@ssword123
               required: [name, email, password]
       responses:
-        '201':
+        "201":
           description: Registration successful
           content:
-            'application/json':
+            "application/json":
               schema:
                 type: object
                 properties:
@@ -62,30 +62,30 @@ paths:
                     properties:
                       access_token:
                         type: string
-                        example: 'access_32rnstUNOirsent321einrtonretsnao'
+                        example: "access_32rnstUNOirsent321einrtonretsnao"
                       refresh_token:
                         type: string
-                        example: 'refresh_rnstUNOirsent321einrtonretsnao'
+                        example: "refresh_rnstUNOirsent321einrtonretsnao"
                   links:
                     type: object
                     properties:
                       self:
                         type: string
-                        example: '/auth/register'
+                        example: "/auth/register"
                       login:
                         type: string
-                        example: '/auth/login'
-        '400':
-          $ref: '#/components/responses/400'
-        '500':
-          $ref: '#/components/responses/500'
-  '/auth/login':
+                        example: "/auth/login"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          $ref: "#/components/responses/500"
+  "/auth/login":
     post:
       description: Login to your account
       tags: [Auth]
       requestBody:
         content:
-          'application/json':
+          "application/json":
             schema:
               type: object
               properties:
@@ -99,10 +99,10 @@ paths:
                   example: P@ssword123
               required: [email, password]
       responses:
-        '200':
+        "200":
           description: Login successful
           content:
-            'application/json':
+            "application/json":
               schema:
                 type: object
                 properties:
@@ -118,39 +118,39 @@ paths:
                     properties:
                       access_token:
                         type: string
-                        example: 'access_32rnstUNOirsent321einrtonretsnao'
+                        example: "access_32rnstUNOirsent321einrtonretsnao"
                       refresh_token:
                         type: string
-                        example: 'refresh_rnstUNOirsent321einrtonretsnao'
+                        example: "refresh_rnstUNOirsent321einrtonretsnao"
                   links:
                     type: object
                     properties:
                       self:
                         type: string
-                        example: '/auth/login'
-        '400':
-          $ref: '#/components/responses/400'
-        '500':
-          $ref: '#/components/responses/500'
-  '/auth/refresh':
+                        example: "/auth/login"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          $ref: "#/components/responses/500"
+  "/auth/refresh":
     post:
       description: Get a new access token via refresh token
       tags: [Auth]
       requestBody:
         content:
-          'application/json':
+          "application/json":
             schema:
               type: object
               properties:
                 refreshToken:
                   type: string
-                  example: 'refresh_rnstUNOirsent321einrtonretsnao'
+                  example: "refresh_rnstUNOirsent321einrtonretsnao"
               required: [refreshToken]
       responses:
-        '201':
+        "201":
           description: Successfully generated a new access token
           content:
-            'application/json':
+            "application/json":
               schema:
                 type: object
                 properties:
@@ -166,34 +166,34 @@ paths:
                     properties:
                       access_token:
                         type: string
-                        example: 'access_32rnstUNOirsent321einrtonretsnao'
+                        example: "access_32rnstUNOirsent321einrtonretsnao"
                   links:
                     type: object
                     properties:
                       self:
                         type: string
-                        example: '/auth/refresh'
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '500':
-          $ref: '#/components/responses/500'
-  '/posts':
+                        example: "/auth/refresh"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+  "/posts":
     get:
       tags: [Post]
       description: Retrieve all posts
       parameters:
-        - $ref: '#/components/parameters/pageParam'
-        - $ref: '#/components/parameters/limitParam'
-        - $ref: '#/components/parameters/sortTypeParam'
-        - $ref: '#/components/parameters/sortByParam'
-        - $ref: '#/components/parameters/searchParam'
+        - $ref: "#/components/parameters/pageParam"
+        - $ref: "#/components/parameters/limitParam"
+        - $ref: "#/components/parameters/sortTypeParam"
+        - $ref: "#/components/parameters/sortByParam"
+        - $ref: "#/components/parameters/searchParam"
       responses:
-        '200':
+        "200":
           description: Return a list of posts
           content:
-            'application/json':
+            "application/json":
               schema:
                 type: object
                 properties:
@@ -215,7 +215,7 @@ paths:
                               format: url
                               example: http://cdn.prantik.com/resnti.jpg
                             creator:
-                              $ref: '#/components/schemas/CreatorDTO'
+                              $ref: "#/components/schemas/CreatorDTO"
                             likes:
                               type: integer
                               format: int32
@@ -223,32 +223,32 @@ paths:
                             comments:
                               type: integer
                               format: int32
-                              example: 15  
+                              example: 15
                             link:
                               type: string
                               format: url
-                              example: '/posts/1'
+                              example: "/posts/1"
                           required: [id, body, creator, likes, comments]
-                        - $ref: '#/components/schemas/Timestamp'
+                        - $ref: "#/components/schemas/Timestamp"
                   pagination:
-                    $ref: '#/components/schemas/Pagination'
+                    $ref: "#/components/schemas/Pagination"
                   links:
                     type: object
                     properties:
                       self:
                         type: string
                         format: url
-                        example: '/posts?page=2&limit=10'
+                        example: "/posts?page=2&limit=10"
                       next:
                         type: string
                         format: url
-                        example: '/posts?page=3&limit=10'
+                        example: "/posts?page=3&limit=10"
                       prev:
                         type: string
                         format: url
-                        example: '/posts?page=1&limit=10'
-        '500':
-          $ref: '#/components/responses/500'
+                        example: "/posts?page=1&limit=10"
+        "500":
+          $ref: "#/components/responses/500"
     post:
       operationId: createPost
       security:
@@ -257,7 +257,7 @@ paths:
       requestBody:
         description: To create a new post, user must need to provide valid data
         content:
-          'application/json':
+          "application/json":
             schema:
               type: object
               properties:
@@ -278,45 +278,45 @@ paths:
                   example: true
               required: [body]
       responses:
-        '201':
+        "201":
           description: Successfully created a new post
           content:
-            'application/json':
+            "application/json":
               schema:
-                $ref: '#/components/schemas/PostCreateDTO'
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '500':
-          $ref: '#/components/responses/500'
-  '/posts/{id}':
+                $ref: "#/components/schemas/PostCreateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+  "/posts/{id}":
     get:
       tags: [Post]
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: "#/components/parameters/idPathParam"
         - in: query
           name: expand
           description: expand creator, likes, and comments object
           schema:
             type: string
-            example: 'creator,likes,comments'
+            example: "creator,likes,comments"
       description: Get a single post
       responses:
-        '200':
+        "200":
           description: Return a single post
           content:
-            'application/json':
+            "application/json":
               schema:
                 type: object
                 properties:
                   data:
                     allOf:
-                      - $ref: '#/components/schemas/Post'
+                      - $ref: "#/components/schemas/Post"
                       - type: object
                         properties:
                           creator:
-                            $ref: '#/components/schemas/CreatorDTO'
+                            $ref: "#/components/schemas/CreatorDTO"
                           likes:
                             type: integer
                             format: int32
@@ -331,33 +331,33 @@ paths:
                       self:
                         type: string
                         format: url
-                        example: '/posts/1'
+                        example: "/posts/1"
                       creator:
                         type: string
                         format: url
-                        example: '/users/1'
+                        example: "/users/1"
                       likes:
                         type: string
                         format: url
-                        example: '/posts/1/likes'
+                        example: "/posts/1/likes"
                       comments:
                         type: string
                         format: url
-                        example: '/posts/1/comments'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'              
+                        example: "/posts/1/comments"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
     put:
       tags: [Post]
       description: Update or create an entire post
       security:
         - bearerAuth: []
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: "#/components/parameters/idPathParam"
       requestBody:
         content:
-          'application/json':
+          "application/json":
             schema:
               type: object
               properties:
@@ -382,34 +382,34 @@ paths:
                   example: true
               required: [body]
       responses:
-        '200':
+        "200":
           description: Successfully Updated
           content:
-            'application/json':
+            "application/json":
               schema:
-                $ref: '#/components/schemas/PostUpdateDTO'
-        '201':
+                $ref: "#/components/schemas/PostUpdateDTO"
+        "201":
           description: Successfully Created
           content:
-            'application/json':
+            "application/json":
               schema:
-                $ref: '#/components/schemas/PostCreateDTO'
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '500':
-          $ref: '#/components/responses/500'
+                $ref: "#/components/schemas/PostCreateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
     patch:
       tags: [Post]
       description: Partially update a post
       security:
         - bearerAuth: []
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: "#/components/parameters/idPathParam"
       requestBody:
         content:
-          'application/json':
+          "application/json":
             schema:
               type: object
               properties:
@@ -429,50 +429,50 @@ paths:
                   type: boolean
                   example: true
       responses:
-        '200':
+        "200":
           description: Successfully Updated
           content:
-            'application/json':
+            "application/json":
               schema:
-                $ref: '#/components/schemas/PostUpdateDTO'
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
+                $ref: "#/components/schemas/PostUpdateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
     delete:
       tags: [Post]
       security:
         - bearerAuth: []
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: "#/components/parameters/idPathParam"
       responses:
-        '204':
-          description: 'Successfully deleted'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
-  '/posts/{id}/likes':
+        "204":
+          description: "Successfully deleted"
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+  "/posts/{id}/likes":
     get:
       tags: [Like]
       description: Retrieve all comments
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
-        - $ref: '#/components/parameters/pageParam'
-        - $ref: '#/components/parameters/limitParam'
-        - $ref: '#/components/parameters/sortTypeParam'
-        - $ref: '#/components/parameters/sortByParam'
+        - $ref: "#/components/parameters/idPathParam"
+        - $ref: "#/components/parameters/pageParam"
+        - $ref: "#/components/parameters/limitParam"
+        - $ref: "#/components/parameters/sortTypeParam"
+        - $ref: "#/components/parameters/sortByParam"
       responses:
-        '200':
+        "200":
           description: Return a list of likes
           content:
-            'application/json':
+            "application/json":
               schema:
                 type: object
                 properties:
@@ -480,87 +480,87 @@ paths:
                     type: array
                     items:
                       allOf:
-                        - $ref: '#/components/schemas/Like'
+                        - $ref: "#/components/schemas/Like"
                         - type: object
                           properties:
                             liker:
-                              $ref: '#/components/schemas/CreatorDTO'
+                              $ref: "#/components/schemas/CreatorDTO"
                           required: [liker]
-                        - $ref: '#/components/schemas/Timestamp'
+                        - $ref: "#/components/schemas/Timestamp"
                   pagination:
-                    $ref: '#/components/schemas/Pagination'
+                    $ref: "#/components/schemas/Pagination"
                   links:
                     type: object
                     properties:
                       self:
                         type: string
                         format: url
-                        example: '/post/1/likes?page=2&limit=10'
+                        example: "/post/1/likes?page=2&limit=10"
                       next:
                         type: string
                         format: url
-                        example: '/post/1/likes?page=3&limit=10'
+                        example: "/post/1/likes?page=3&limit=10"
                       prev:
                         type: string
                         format: url
-                        example: '/post/1/likes?page=1&limit=10'
-        '500':
-          $ref: '#/components/responses/500'
+                        example: "/post/1/likes?page=1&limit=10"
+        "500":
+          $ref: "#/components/responses/500"
     post:
       tags: [Like]
       security:
         - bearerAuth: []
       description: Like a post
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: "#/components/parameters/idPathParam"
       responses:
-        '201':
+        "201":
           description: Successfully liked the post
           content:
-            'application/json':
+            "application/json":
               schema:
                 type: object
                 properties:
                   data:
-                    $ref: '#/components/schemas/Like'
+                    $ref: "#/components/schemas/Like"
                   links:
                     type: object
                     properties:
                       self:
                         type: string
                         format: url
-                        example: '/posts/1/likes'
+                        example: "/posts/1/likes"
     delete:
       tags: [Like]
       security:
         - bearerAuth: []
       description: Unlike a post
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: "#/components/parameters/idPathParam"
       responses:
-        '204':
-          description: 'Successfully deleted'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
-  '/comments':
+        "204":
+          description: "Successfully deleted"
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+  "/comments":
     get:
       tags: [Comment]
       description: Retrieve all comments
       parameters:
-        - $ref: '#/components/parameters/pageParam'
-        - $ref: '#/components/parameters/limitParam'
-        - $ref: '#/components/parameters/sortTypeParam'
-        - $ref: '#/components/parameters/sortByParam'
-        - $ref: '#/components/parameters/searchParam'
+        - $ref: "#/components/parameters/pageParam"
+        - $ref: "#/components/parameters/limitParam"
+        - $ref: "#/components/parameters/sortTypeParam"
+        - $ref: "#/components/parameters/sortByParam"
+        - $ref: "#/components/parameters/searchParam"
       responses:
-        '200':
+        "200":
           description: Return a list of comments
           content:
-            'application/json':
+            "application/json":
               schema:
                 type: object
                 properties:
@@ -575,36 +575,36 @@ paths:
                     type: array
                     items:
                       allOf:
-                        - $ref: '#/components/schemas/Comment'
+                        - $ref: "#/components/schemas/Comment"
                         - type: object
                           properties:
                             commentor:
-                              $ref: '#/components/schemas/CreatorDTO'
+                              $ref: "#/components/schemas/CreatorDTO"
                             link:
                               type: string
                               format: url
-                              example: '/comments/1'
+                              example: "/comments/1"
                           required: [id, body, commentor, postId]
-                        - $ref: '#/components/schemas/Timestamp'
+                        - $ref: "#/components/schemas/Timestamp"
                   pagination:
-                    $ref: '#/components/schemas/Pagination'
+                    $ref: "#/components/schemas/Pagination"
                   links:
                     type: object
                     properties:
                       self:
                         type: string
                         format: url
-                        example: '/comments?page=2&limit=10'
+                        example: "/comments?page=2&limit=10"
                       next:
                         type: string
                         format: url
-                        example: '/comments?page=3&limit=10'
+                        example: "/comments?page=3&limit=10"
                       prev:
                         type: string
                         format: url
-                        example: '/comments?page=1&limit=10'
-        '500':
-          $ref: '#/components/responses/500'
+                        example: "/comments?page=1&limit=10"
+        "500":
+          $ref: "#/components/responses/500"
     post:
       operationId: createComment
       security:
@@ -613,7 +613,7 @@ paths:
       requestBody:
         description: To create a new comment, user must need to provide valid data
         content:
-          'application/json':
+          "application/json":
             schema:
               type: object
               properties:
@@ -626,34 +626,34 @@ paths:
                   example: 1
               required: [body, postId]
       responses:
-        '201':
+        "201":
           description: Successfully created a new comment
           content:
-            'application/json':
+            "application/json":
               schema:
-                $ref: '#/components/schemas/CommentCreateDTO'
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '500':
-          $ref: '#/components/responses/500'
-  '/posts/{id}/comments':
+                $ref: "#/components/schemas/CommentCreateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+  "/posts/{id}/comments":
     get:
       tags: [Comment]
       description: Retrieve all comments of a post
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
-        - $ref: '#/components/parameters/pageParam'
-        - $ref: '#/components/parameters/limitParam'
-        - $ref: '#/components/parameters/sortTypeParam'
-        - $ref: '#/components/parameters/sortByParam'
-        - $ref: '#/components/parameters/searchParam'
+        - $ref: "#/components/parameters/idPathParam"
+        - $ref: "#/components/parameters/pageParam"
+        - $ref: "#/components/parameters/limitParam"
+        - $ref: "#/components/parameters/sortTypeParam"
+        - $ref: "#/components/parameters/sortByParam"
+        - $ref: "#/components/parameters/searchParam"
       responses:
-        '200':
+        "200":
           description: Return a list of comments
           content:
-            'application/json':
+            "application/json":
               schema:
                 type: object
                 properties:
@@ -668,49 +668,49 @@ paths:
                     type: array
                     items:
                       allOf:
-                        - $ref: '#/components/schemas/Comment'
+                        - $ref: "#/components/schemas/Comment"
                         - type: object
                           properties:
                             commentor:
-                              $ref: '#/components/schemas/CreatorDTO'
+                              $ref: "#/components/schemas/CreatorDTO"
                             link:
                               type: string
                               format: url
-                              example: '/comments/1'
+                              example: "/comments/1"
                           required: [id, body, commentor, postId]
-                        - $ref: '#/components/schemas/Timestamp'
+                        - $ref: "#/components/schemas/Timestamp"
                   pagination:
-                    $ref: '#/components/schemas/Pagination'
+                    $ref: "#/components/schemas/Pagination"
                   links:
                     type: object
                     properties:
                       self:
                         type: string
                         format: url
-                        example: '/comments?page=2&limit=10'
+                        example: "/comments?page=2&limit=10"
                       next:
                         type: string
                         format: url
-                        example: '/comments?page=3&limit=10'
+                        example: "/comments?page=3&limit=10"
                       prev:
                         type: string
                         format: url
-                        example: '/comments?page=1&limit=10'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
+                        example: "/comments?page=1&limit=10"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
     post:
       operationId: createCommentOfPost
       security:
         - bearerAuth: []
       tags: [Comment]
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: "#/components/parameters/idPathParam"
       requestBody:
         description: To create a new comment, user must need to provide valid data
         content:
-          'application/json':
+          "application/json":
             schema:
               type: object
               properties:
@@ -719,29 +719,29 @@ paths:
                   example: A new comment
               required: [body, postId]
       responses:
-        '201':
+        "201":
           description: Successfully created a new comment
           content:
-            'application/json':
+            "application/json":
               schema:
-                $ref: '#/components/schemas/CommentCreateDTO'
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '500':
-          $ref: '#/components/responses/500'
-  '/comments/{id}':
+                $ref: "#/components/schemas/CommentCreateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+  "/comments/{id}":
     get:
       tags: [Comment]
       description: Retrieve all comments
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: "#/components/parameters/idPathParam"
       responses:
-        '200':
+        "200":
           description: Return a comment
           content:
-            'application/json':
+            "application/json":
               schema:
                 type: object
                 properties:
@@ -761,39 +761,39 @@ paths:
                             format: int32
                             example: 1
                           commentor:
-                            $ref: '#/components/schemas/CreatorDTO'
+                            $ref: "#/components/schemas/CreatorDTO"
                         required: [id, body, commentor, postId]
-                      - $ref: '#/components/schemas/Timestamp'
-                  
+                      - $ref: "#/components/schemas/Timestamp"
+
                   links:
                     type: object
                     properties:
                       self:
                         type: string
                         format: url
-                        example: '/comments/1'
+                        example: "/comments/1"
                       post:
                         type: string
                         format: url
-                        example: '/posts/1'
+                        example: "/posts/1"
                       commentor:
                         type: string
                         format: url
-                        example: '/users/1'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
+                        example: "/users/1"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
     patch:
       tags: [Comment]
       description: Partially update a comment
       security:
         - bearerAuth: []
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: "#/components/parameters/idPathParam"
       requestBody:
         content:
-          'application/json':
+          "application/json":
             schema:
               type: object
               properties:
@@ -806,50 +806,50 @@ paths:
                   enum: [public, hidden]
                   example: hidden
       responses:
-        '200':
+        "200":
           description: Successfully Updated
           content:
-            'application/json':
+            "application/json":
               schema:
-                $ref: '#/components/schemas/CommentUpdateDTO'
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
+                $ref: "#/components/schemas/CommentUpdateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
     delete:
       tags: [Comment]
       security:
         - bearerAuth: []
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: "#/components/parameters/idPathParam"
       responses:
-        '204':
-          description: 'Successfully deleted'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
-  '/users':
+        "204":
+          description: "Successfully deleted"
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+  "/users":
     get:
       tags: [User]
       description: Retrieve all users
       parameters:
-        - $ref: '#/components/parameters/pageParam'
-        - $ref: '#/components/parameters/limitParam'
-        - $ref: '#/components/parameters/sortTypeParam'
-        - $ref: '#/components/parameters/sortByParam'
-        - $ref: '#/components/parameters/searchParam'
+        - $ref: "#/components/parameters/pageParam"
+        - $ref: "#/components/parameters/limitParam"
+        - $ref: "#/components/parameters/sortTypeParam"
+        - $ref: "#/components/parameters/sortByParam"
+        - $ref: "#/components/parameters/searchParam"
       responses:
-        '200':
+        "200":
           description: Return a list of users
           content:
-            'application/json':
+            "application/json":
               schema:
                 type: object
                 properties:
@@ -857,7 +857,7 @@ paths:
                     type: array
                     items:
                       allOf:
-                        - $ref: '#/components/schemas/User'
+                        - $ref: "#/components/schemas/User"
                         - type: object
                           properties:
                             links:
@@ -866,26 +866,26 @@ paths:
                                 posts:
                                   type: string
                                   format: url
-                                  example: '/posts?user=1'
+                                  example: "/posts?user=1"
                   pagination:
-                    $ref: '#/components/schemas/Pagination'
+                    $ref: "#/components/schemas/Pagination"
                   links:
                     type: object
                     properties:
                       self:
                         type: string
                         format: url
-                        example: '/posts?page=2&limit=10'
+                        example: "/posts?page=2&limit=10"
                       next:
                         type: string
                         format: url
-                        example: '/posts?page=3&limit=10'
+                        example: "/posts?page=3&limit=10"
                       prev:
                         type: string
                         format: url
-                        example: '/posts?page=1&limit=10'
-        '500':
-          $ref: '#/components/responses/500'
+                        example: "/posts?page=1&limit=10"
+        "500":
+          $ref: "#/components/responses/500"
     post:
       operationId: createUser
       security:
@@ -894,7 +894,7 @@ paths:
       requestBody:
         description: To create a new user, must need to provide valid data
         content:
-          'application/json':
+          "application/json":
             schema:
               type: object
               properties:
@@ -923,41 +923,41 @@ paths:
                   example: unverified
               required: [name, email, password]
       responses:
-        '201':
+        "201":
           description: Successfully created a new user
           content:
-            'application/json':
+            "application/json":
               schema:
-                $ref: '#/components/schemas/UserCreateDTO'
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '500':
-          $ref: '#/components/responses/500'
-  '/users/{id}':
+                $ref: "#/components/schemas/UserCreateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+  "/users/{id}":
     get:
       tags: [User]
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: "#/components/parameters/idPathParam"
         - in: query
           name: expand
           description: expand followers, followees
           schema:
             type: string
-            example: 'followers,followees'
+            example: "followers,followees"
       description: Get a single user
       responses:
-        '200':
+        "200":
           description: Return a single user
           content:
-            'application/json':
+            "application/json":
               schema:
                 type: object
                 properties:
                   data:
                     allOf:
-                      - $ref: '#/components/schemas/User'
+                      - $ref: "#/components/schemas/User"
                       - type: object
                         properties:
                           followers:
@@ -974,33 +974,33 @@ paths:
                       self:
                         type: string
                         format: url
-                        example: '/posts/1'
+                        example: "/posts/1"
                       creator:
                         type: string
                         format: url
-                        example: '/users/1'
+                        example: "/users/1"
                       likes:
                         type: string
                         format: url
-                        example: '/posts/1/likes'
+                        example: "/posts/1/likes"
                       comments:
                         type: string
                         format: url
-                        example: '/posts/1/comments'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'              
+                        example: "/posts/1/comments"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
     put:
       tags: [User]
       description: Update or create an entire user
       security:
         - bearerAuth: []
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: "#/components/parameters/idPathParam"
       requestBody:
         content:
-          'application/json':
+          "application/json":
             schema:
               type: object
               properties:
@@ -1029,34 +1029,34 @@ paths:
                   example: unverified
               required: [name, email, password]
       responses:
-        '200':
+        "200":
           description: Successfully Updated
           content:
-            'application/json':
+            "application/json":
               schema:
-                $ref: '#/components/schemas/UserUpdateDTO'
-        '201':
+                $ref: "#/components/schemas/UserUpdateDTO"
+        "201":
           description: Successfully Created
           content:
-            'application/json':
+            "application/json":
               schema:
-                $ref: '#/components/schemas/UserCreateDTO'
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '500':
-          $ref: '#/components/responses/500'
+                $ref: "#/components/schemas/UserCreateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
     patch:
       tags: [User]
       description: Update a user partially
       security:
         - bearerAuth: []
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: "#/components/parameters/idPathParam"
       requestBody:
         content:
-          'application/json':
+          "application/json":
             schema:
               type: object
               properties:
@@ -1084,48 +1084,48 @@ paths:
                   enum: [unverified, verified, banned]
                   example: unverified
       responses:
-        '200':
+        "200":
           description: Successfully Updated
           content:
-            'application/json':
+            "application/json":
               schema:
-                $ref: '#/components/schemas/UserUpdateDTO'
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
+                $ref: "#/components/schemas/UserUpdateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
     delete:
       tags: [User]
       security:
         - bearerAuth: []
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: "#/components/parameters/idPathParam"
       responses:
-        '204':
-          description: 'Successfully deleted'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
-  '/users/{id}/follow':
+        "204":
+          description: "Successfully deleted"
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+  "/users/{id}/follow":
     post:
       tags: [Follow]
       security:
         - bearerAuth: []
       description: Follow a user
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: "#/components/parameters/idPathParam"
       responses:
-        '201':
+        "201":
           description: Successfully followed a user
           content:
-            'application/json':
+            "application/json":
               schema:
                 type: object
                 properties:
@@ -1137,37 +1137,37 @@ paths:
                     type: string
                     example: Successfully followed the user
                   data:
-                    $ref: '#/components/schemas/Follower'
+                    $ref: "#/components/schemas/Follower"
                   links:
                     type: object
                     properties:
                       self:
                         type: string
                         format: url
-                        example: '/users/1/follow'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
-  '/users/{id}/unfollow':
+                        example: "/users/1/follow"
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+  "/users/{id}/unfollow":
     post:
       tags: [Follow]
       security:
         - bearerAuth: []
       description: Follow a user
       parameters:
-        - $ref: '#/components/parameters/idPathParam'
+        - $ref: "#/components/parameters/idPathParam"
       responses:
-        '204':
+        "204":
           description: Successfully unfollowed a user
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
 components:
   securitySchemes:
     bearerAuth:
@@ -1200,10 +1200,10 @@ components:
               example: true
             audience:
               type: string
-              enum: ['everyone', 'public', 'only_me']
+              enum: ["everyone", "public", "only_me"]
               example: everyone
           required: [id, body, creatorId, commenting, audience]
-        - $ref: '#/components/schemas/Timestamp'
+        - $ref: "#/components/schemas/Timestamp"
     User:
       allOf:
         - type: object
@@ -1230,7 +1230,7 @@ components:
               enum: [unverified, verified, banned]
               example: unverified
           required: [id, name, password, role, status]
-        - $ref: '#/components/schemas/Timestamp'
+        - $ref: "#/components/schemas/Timestamp"
     Like:
       allOf:
         - type: object
@@ -1248,7 +1248,7 @@ components:
               format: int32
               example: 1
           required: [id, likerId, postId]
-        - $ref: '#/components/schemas/Timestamp'
+        - $ref: "#/components/schemas/Timestamp"
     Comment:
       allOf:
         - type: object
@@ -1273,7 +1273,7 @@ components:
               enum: [public, hidden]
               example: hidden
           required: [id, body, commentorId, postId, status]
-        - $ref: '#/components/schemas/Timestamp'
+        - $ref: "#/components/schemas/Timestamp"
     Follower:
       allOf:
         - type: object
@@ -1291,7 +1291,7 @@ components:
               format: int32
               example: 1
           required: [id, followerId, followeeId]
-        - $ref: '#/components/schemas/Timestamp'
+        - $ref: "#/components/schemas/Timestamp"
     PostCreateDTO:
       type: object
       properties:
@@ -1303,26 +1303,26 @@ components:
           type: string
           example: "Post created successfully"
         data:
-          $ref: '#/components/schemas/Post'
+          $ref: "#/components/schemas/Post"
         links:
           type: object
           properties:
             self:
               type: string
               format: url
-              example: '/posts/1'
+              example: "/posts/1"
             creator:
               type: string
               format: url
-              example: '/users/1'
+              example: "/users/1"
             likes:
               type: string
               format: url
-              example: '/posts/1/likes'
+              example: "/posts/1/likes"
             comments:
               type: string
               format: url
-              example: '/posts/1/comments'
+              example: "/posts/1/comments"
       required: [code, message, data, links]
     PostUpdateDTO:
       type: object
@@ -1335,26 +1335,26 @@ components:
           type: string
           example: Post updated successfully
         data:
-          $ref: '#/components/schemas/Post'
+          $ref: "#/components/schemas/Post"
         links:
           type: object
           properties:
             self:
               type: string
               format: url
-              example: '/posts/1'
+              example: "/posts/1"
             creator:
               type: string
               format: url
-              example: '/users/1'
+              example: "/users/1"
             likes:
               type: string
               format: url
-              example: '/posts/1/likes'
+              example: "/posts/1/likes"
             comments:
               type: string
               format: url
-              example: '/posts/1/comments'
+              example: "/posts/1/comments"
       required: [code, message, data, links]
     CreatorDTO:
       type: object
@@ -1379,26 +1379,26 @@ components:
           example: "Comment created successfully"
         data:
           allOf:
-            - $ref: '#/components/schemas/Comment'
+            - $ref: "#/components/schemas/Comment"
             - type: object
               properties:
                 commentor:
-                  $ref: '#/components/schemas/CreatorDTO'
+                  $ref: "#/components/schemas/CreatorDTO"
         links:
           type: object
           properties:
             self:
               type: string
               format: url
-              example: '/comments/1'
+              example: "/comments/1"
             commentor:
               type: string
               format: url
-              example: '/users/1'
+              example: "/users/1"
             post:
               type: string
               format: url
-              example: '/posts/1'
+              example: "/posts/1"
       required: [code, message, data, links]
     CommentUpdateDTO:
       type: object
@@ -1412,26 +1412,26 @@ components:
           example: "Comment updated successfully"
         data:
           allOf:
-            - $ref: '#/components/schemas/Comment'
+            - $ref: "#/components/schemas/Comment"
             - type: object
               properties:
                 commentor:
-                  $ref: '#/components/schemas/CreatorDTO'
+                  $ref: "#/components/schemas/CreatorDTO"
         links:
           type: object
           properties:
             self:
               type: string
               format: url
-              example: '/comments/1'
+              example: "/comments/1"
             commentor:
               type: string
               format: url
-              example: '/users/1'
+              example: "/users/1"
             post:
               type: string
               format: url
-              example: '/posts/1'
+              example: "/posts/1"
       required: [code, message, data, links]
     UserCreateDTO:
       type: object
@@ -1444,26 +1444,26 @@ components:
           type: string
           example: "User created successfully"
         data:
-          $ref: '#/components/schemas/User'
+          $ref: "#/components/schemas/User"
         links:
           type: object
           properties:
             self:
               type: string
               format: url
-              example: '/users'
+              example: "/users"
             view:
               type: string
               format: url
-              example: '/users/1'
+              example: "/users/1"
             edit:
               type: string
               format: url
-              example: '/users/1'
+              example: "/users/1"
             delete:
               type: string
               format: url
-              example: '/users/1'
+              example: "/users/1"
       required: [code, message, data, links]
     UserUpdateDTO:
       type: object
@@ -1476,26 +1476,26 @@ components:
           type: string
           example: "User updated successfully"
         data:
-          $ref: '#/components/schemas/User'
+          $ref: "#/components/schemas/User"
         links:
           type: object
           properties:
             self:
               type: string
               format: url
-              example: '/users'
+              example: "/users"
             view:
               type: string
               format: url
-              example: '/users/1'
+              example: "/users/1"
             edit:
               type: string
               format: url
-              example: '/users/1'
+              example: "/users/1"
             delete:
               type: string
               format: url
-              example: '/users/1'
+              example: "/users/1"
       required: [code, message, data, links]
     Timestamp:
       type: object
@@ -1503,11 +1503,11 @@ components:
         createdAt:
           type: string
           format: datetime
-          example: '2023-09-11T05:35:12.075Z'
+          example: "2023-09-11T05:35:12.075Z"
         updatedAt:
           type: string
           format: datetime
-          example: '2023-09-11T05:35:48.699Z'
+          example: "2023-09-11T05:35:48.699Z"
       required: [createdAt, updatedAt]
     Pagination:
       type: object
@@ -1542,10 +1542,10 @@ components:
         - totalPage
         - totalItems
   responses:
-    '500':
+    "500":
       description: Internal Server Error
       content:
-        'application/json':
+        "application/json":
           schema:
             type: object
             properties:
@@ -1559,10 +1559,10 @@ components:
               message:
                 type: string
                 example: Something went wrong!
-    '400':
+    "400":
       description: Bad Request
       content:
-        'application/json':
+        "application/json":
           schema:
             type: object
             properties:
@@ -1588,10 +1588,10 @@ components:
                       type: string
                       enum: [query, body]
                       example: body
-    '401':
+    "401":
       description: Unauthorized
       content:
-        'application/json':
+        "application/json":
           schema:
             type: object
             properties:
@@ -1605,10 +1605,10 @@ components:
               message:
                 type: string
                 example: You don't have the right permission
-    '404':
+    "404":
       description: Resource Not Found
       content:
-        'application/json':
+        "application/json":
           schema:
             type: object
             properties:
@@ -1670,13 +1670,3 @@ components:
       schema:
         type: string
         example: "32da98887ab23423"
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
