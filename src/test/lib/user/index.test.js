@@ -1,4 +1,4 @@
-const { createUser, deleteUser, findSingleUser, findAllUser, updateOrCreateUser, updateUser } = require('../../../lib/user')
+const { createUser, deleteUser, findSingleUser, findAllUser, updateOrCreateUser, updateUser, findUserByEmail } = require('../../../lib/user')
 const { connectDB } = require('../../../db')
 const { User } = require('../../../models')
 const { notFound } = require('../../../utils/httpErrors');
@@ -78,6 +78,28 @@ describe('USER', () => {
             expect(users[1]).not.toHaveProperty('status')
 
             // console.log(users);
+        })
+    })
+
+    describe('Find user by email', () => {
+        it('should return a user by right email', async () => {
+            const { user } = await createRandomUser()
+
+            const foundUser = await findUserByEmail(user.email)
+
+            expect(foundUser.email).toBe(user.email)
+        })
+
+        it('should return null by wrong email', async () => {
+            const foundUser = await findUserByEmail('user@gmail.com')
+
+            expect(foundUser).toBeNull()
+        })
+
+        it('should return null by no email', async () => {
+            const foundUser = await findUserByEmail('')
+
+            expect(foundUser).toBeNull()
         })
     })
 
