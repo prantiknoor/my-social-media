@@ -51,6 +51,8 @@ const findAllUser = async ({
     return users
 }
 
+const findUserByEmail = (email) => User.findOne({ email })
+
 const updateOrCreateUser = async (id, { name, email, password, bio, status, role }) => {
     let user = await User.findById(id)
 
@@ -91,4 +93,12 @@ const deleteUser = async (id) => {
     if (!user) throw notFound()
 }
 
-module.exports = { createUser, deleteUser, findSingleUser, findAllUser, updateOrCreateUser, updateUser }
+module.exports = {
+    createUser,
+    deleteUser,
+    findSingleUser,
+    findAllUser,
+    updateOrCreateUser,
+    updateUser,
+    findUserByEmail,
+}
