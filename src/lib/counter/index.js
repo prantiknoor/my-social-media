@@ -19,10 +19,15 @@ const findCounter = async ({ parent, type }) => {
     return counter
 }
 
+/**
+ * It will create a new counter if it doesn't find any
+ */
 const incrementCounter = async ({ parent, type, incrementBy = 1 }) => {
     const counter = await Counter.findOne({ parent, type })
 
-    if (!counter) throw notFound()
+    if (!counter) {
+        return await Counter.create({ parent, type, count: incrementBy })
+    }
 
     const count = counter.count + incrementBy
 
