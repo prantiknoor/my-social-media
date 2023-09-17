@@ -56,9 +56,17 @@ describe('Counter', () => {
             expect(counterNow.count).toBe(counterPrev.count + incrementBy)
         });
 
-        it('should throw notFound error because it doesn\'t find counter', () => {
-            return expect(incrementCounter({ parent: fakeParentId, type: 'followers' }))
+        it('should create a new counter then increment by 1', async () => {
+            const incrementBy = 1;
+
+            expect(findCounter({ parent: parentId, type: 'followees' }))
                 .rejects.toThrow(notFound())
+
+            await incrementCounter({ parent: parentId, type: 'followees', incrementBy })
+
+            const counter = await findCounter({ parent: parentId, type: 'followees' })
+
+            expect(counter.count).toBe(incrementBy)
         });
     });
 });
