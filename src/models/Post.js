@@ -12,6 +12,10 @@ const postSchema = new Schema(
             type: String,
             required: false,
         },
+        commenting: {
+            type: Boolean,
+            default: true
+        },
         audience: {
             type: String,
             enum: ['everyone', 'public', 'only_me'],
