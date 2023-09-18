@@ -76,7 +76,7 @@ const updateUser = async (id, { name, email, password, bio, status, role }) => {
     const payload = {
         name: name ?? user.name,
         email: email ?? user.email,
-        password: password ?? user.email,
+        password: password ?? user.password,
         bio: bio ?? user.bio,
         status: status ?? user.status,
         role: role ?? user.role
