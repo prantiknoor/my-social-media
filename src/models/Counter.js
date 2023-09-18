@@ -7,12 +7,11 @@ const followerSchema = new Schema(
         },
         count: {
             type: Number,
-            ref: 'User'
+            default: 0
         },
         type: String
     },
     {
-        id: false,
         timestamps: true,
     })
 
