@@ -140,7 +140,7 @@ describe('Post', () => {
                 expect(updatedPost.audience).toBe(newData.audience)
             })
 
-            it('should not find user then create a new user', async () => {
+            it('should not find post then create a new post', async () => {
                 const data = { body: faker.lorem.paragraph() }
 
                 const { post, code } = await updateOrCreatePost(randomPostId, { ...data })

@@ -50,12 +50,12 @@ const findAllPost = async ({
         body: { $regex: search, $options: 'i' }
     }
 
-    const users = await Post.find(filter)
+    const posts = await Post.find(filter)
         .sort(sort)
         .skip((page - 1) * limit)
         .limit(limit)
 
-    return users
+    return posts
 }
 
 const updateOrCreatePost = async (id, { creator, body, photo, commenting, audience }) => {
