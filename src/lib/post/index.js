@@ -58,6 +58,23 @@ const findAllPost = async ({
     return posts
 }
 
+// TODO: Test this function
+const countPost = async (search = '') => {
+    const filter = {
+        body: { $regex: search, $options: 'i' }
+    }
+    return Post.count(filter)
+}
+
+// TODO: Test this function
+const checkOwnership = async ({ postId, userId }) => {
+    const post = await Post.findById(postId)
+
+    if (!post) throw notFound()
+
+    return post.creator.toString() === userId
+}
+
 const updateOrCreatePost = async (id, { creator, body, photo, commenting, audience }) => {
     let post = await Post.findById(id)
 
@@ -92,4 +109,13 @@ const updatePost = async (id, { creator, body, photo, commenting, audience }) =>
 }
 
 
-module.exports = { createPost, deletePost, findSinglePost, findAllPost, updateOrCreatePost, updatePost }
+module.exports = {
+    createPost,
+    deletePost,
+    findSinglePost,
+    findAllPost,
+    updateOrCreatePost,
+    updatePost,
+    countPost,
+    checkOwnership
+}

@@ -51,7 +51,16 @@ const findAllUser = async ({
     return users
 }
 
+// TODO: Test this function
+const countUser = async (search = '') => {
+    const filter = {
+        name: { $regex: search, $options: 'i' }
+    }
+    return User.count(filter)
+}
+
 const findUserByEmail = (email) => User.findOne({ email })
+const findUserById = (id) => User.findById(id)
 
 const updateOrCreateUser = async (id, { name, email, password, bio, status, role }) => {
     let user = await User.findById(id)
@@ -98,7 +107,9 @@ module.exports = {
     deleteUser,
     findSingleUser,
     findAllUser,
+    countUser,
     updateOrCreateUser,
     updateUser,
     findUserByEmail,
+    findUserById
 }
