@@ -1,6 +1,7 @@
 const app = require('./app')
 const { createServer } = require('node:http')
 const { connectDB } = require('./db')
+require('dotenv').config({})
 
 const server = createServer(app)
 
