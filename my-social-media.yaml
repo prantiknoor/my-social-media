@@ -5,7 +5,7 @@ info:
   # description:
 servers:
   - description: Dev
-    url: "http://localhost:8000/api/v1"
+    url: "http://localhost:3000/api/v1"
 tags:
   - name: Auth
     description: Authentication Endpoint
@@ -900,6 +900,8 @@ paths:
               properties:
                 name:
                   type: string
+                  minLength: 5
+                  maxLength: 30
                   example: Mahathiur Xiam
                 email:
                   type: string
@@ -908,10 +910,13 @@ paths:
                 password:
                   type: string
                   format: password
+                  minLength: 6
+                  maxLength: 100
                   example: P@ssword123
                 bio:
                   type: string
                   format: text
+                  maxLength: 256
                   example: It is my bio
                 role:
                   type: string
@@ -974,19 +979,11 @@ paths:
                       self:
                         type: string
                         format: url
-                        example: "/posts/1"
-                      creator:
-                        type: string
-                        format: url
                         example: "/users/1"
-                      likes:
+                      posts:
                         type: string
                         format: url
-                        example: "/posts/1/likes"
-                      comments:
-                        type: string
-                        format: url
-                        example: "/posts/1/comments"
+                        example: "/uesrs/1/posts"
         "404":
           $ref: "#/components/responses/404"
         "500":
@@ -1627,7 +1624,6 @@ components:
       in: query
       name: page
       description: current page number
-      required: true
       schema:
         type: integer
         format: int32
@@ -1636,7 +1632,6 @@ components:
       in: query
       name: limit
       description: maximum items to be returned
-      required: true
       schema:
         type: integer
         format: int32
