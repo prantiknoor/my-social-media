@@ -4,19 +4,17 @@ const userSchema = new Schema(
     {
         name: {
             type: String,
-            minLength: 5,
+            minLength: 3,
             maxLength: 30,
             required: true,
         },
         bio: {
             type: String,
-            minLength: 10,
             maxLength: 256,
-            required: false,
         },
         email: {
             type: String,
-            // unique: true,
+            unique: true,
             required: true,
         },
         password: {

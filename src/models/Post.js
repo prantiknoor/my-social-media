@@ -4,26 +4,26 @@ const postSchema = new Schema(
     {
         body: {
             type: String,
-            minLength: 2,
+            minLength: 1,
             maxLength: 256,
             required: true,
         },
-        photo: {
-            type: String,
-            required: false,
-        },
+        photo: String,
         commenting: {
             type: Boolean,
+            required: true,
             default: true
         },
         audience: {
             type: String,
             enum: ['everyone', 'public', 'only_me'],
-            default: 'everyone'
+            default: 'everyone',
+            required: true
         },
         creator: {
             type: Schema.ObjectId,
-            ref: 'User'
+            ref: 'User',
+            required: true
         }
     },
     {

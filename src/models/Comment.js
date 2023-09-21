@@ -11,15 +11,18 @@ const commentSchema = new Schema(
         status: {
             type: String,
             enum: ['public', 'hidden'],
+            required: true,
             default: 'public'
         },
         commentor: {
             type: Schema.ObjectId,
-            ref: 'User'
+            ref: 'User',
+            required: true
         },
         post: {
             type: Schema.ObjectId,
-            ref: 'Post'
+            ref: 'Post',
+            required: true
         }
     },
     {
