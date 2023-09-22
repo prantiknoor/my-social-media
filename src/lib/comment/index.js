@@ -87,6 +87,15 @@ const updateComment = async (id, { body, post, commentor, status }) => {
     return comment
 }
 
+// TODO: Test this function
+const checkOwnership = async ({ commentId, userId }) => {
+    const comment = await Comment.findById(commentId)
+
+    if (!comment) throw notFound()
+
+    return comment.commentor.toString() === userId
+}
+
 module.exports = {
     createComment,
     deleteComment,
@@ -94,5 +103,6 @@ module.exports = {
     findAllComment,
     updateComment,
     updateOrCreateComment,
-    countComments
+    countComments,
+    checkOwnership
 }
