@@ -3,9 +3,10 @@ const userService = require('../../../../lib/user')
 const findSingle = async (req, res, next) => {
     try {
         const user = await userService.findSingleUser(req.params.id)
+        const code = 200
 
         const response = {
-            code: 200,
+            code,
             message: 'User found',
             data: user,
             links: {
@@ -14,7 +15,7 @@ const findSingle = async (req, res, next) => {
             }
         }
 
-        res.status(201).json(response)
+        res.status(code).json(response)
     } catch (error) {
         next(error)
     }

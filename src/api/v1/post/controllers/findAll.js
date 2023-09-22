@@ -26,7 +26,10 @@ const findAll = async (req, res, next) => {
             hasPrev: pagination.prev,
         })
 
-        res.status(201).json({
+        const code = 200
+
+        res.status(code).json({
+            code,
             data,
             pagination,
             links

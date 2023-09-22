@@ -3,9 +3,10 @@ const postService = require('../../../../lib/post')
 const findSingle = async (req, res, next) => {
     try {
         const post = await postService.findSinglePost(req.params.id)
+        const code = 200
 
         const response = {
-            code: 200,
+            code,
             message: 'Post found',
             data: post,
             links: {
@@ -15,7 +16,7 @@ const findSingle = async (req, res, next) => {
             }
         }
 
-        res.status(201).json(response)
+        res.status(code).json(response)
     } catch (error) {
         next(error)
     }
