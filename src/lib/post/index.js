@@ -1,6 +1,6 @@
 const { Post } = require("../../models");
 const { notFound } = require("../../utils/httpErrors");
-const { findCounter } = require("../../../src/lib/counter");
+const { findCounter } = require("../counter");
 const defaults = require("../../config/defaults");
 
 const createPost = async ({ creator, body, photo, commenting, audience }) => {
