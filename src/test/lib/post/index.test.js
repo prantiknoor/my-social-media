@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const { connectDB } = require('../../../db')
 const { faker } = require('@faker-js/faker')
 const { createRandomUser, createRandomPost } = require('../../helpers')
-const { createPost, deletePost, findSinglePost, findAllPost, updateOrCreatePost, updatePost } = require('../../../lib/post')
+const { createPost, deletePost, findSinglePost, findAllPost, updateOrCreatePost, updatePost, countPost } = require('../../../lib/post')
 const { notFound } = require('../../../utils/httpErrors')
 const { Post } = require('../../../models')
 
@@ -19,7 +19,7 @@ describe('Post', () => {
     let user, randomPostId = '6506d176b40d591e4fddb5e4'
 
     beforeAll(async () => {
-        user = await createRandomUser()
+        user = (await createRandomUser()).user
     })
 
     describe('Post Creation', () => {
@@ -29,7 +29,7 @@ describe('Post', () => {
             const post = await createPost({ creator: user.id, body })
 
             expect(post.body).toBe(body)
-            expect(post.creator).toBe(user.id)
+            expect(post.creator.toString()).toBe(user.id)
         })
         it('should throw badRequest error for invalid input', () => {
             const bigBody = faker.lorem.paragraph(10)
@@ -65,10 +65,10 @@ describe('Post', () => {
             })
         })
         describe('Getting all posts', () => {
-            const totalPosts = 5
+            let totalPosts
 
             beforeAll(async () => {
-                await Post.deleteMany()
+                totalPosts = await countPost()
 
                 for (let i = 0; i < totalPosts; i++) {
                     await createRandomPost({})
@@ -127,8 +127,8 @@ describe('Post', () => {
             it('should update post and return 200 code', async () => {
                 const { post } = await createRandomPost({})
                 const newData = {
-                    ...post,
                     body: faker.lorem.paragraph(),
+                    creator: user.id,
                     audience: 'public'
                 }
 
@@ -141,7 +141,10 @@ describe('Post', () => {
             })
 
             it('should not find post then create a new post', async () => {
-                const data = { body: faker.lorem.paragraph() }
+                const data = {
+                    body: faker.lorem.paragraph(),
+                    creator: user.id,
+                }
 
                 const { post, code } = await updateOrCreatePost(randomPostId, { ...data })
 

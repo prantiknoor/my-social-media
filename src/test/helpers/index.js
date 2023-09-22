@@ -33,7 +33,7 @@ const createRandomPost = async ({ commenting, audience, creator = '6506d176b40d5
 }
 
 const createRandomComment = async (data) => {
-    const post = await createRandomPost({})
+    const { post } = await createRandomPost({})
 
     data = {
         body: data?.body ?? faker.lorem.sentence(),

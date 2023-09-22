@@ -153,7 +153,7 @@ describe('Comment', () => {
             it('should update comment and return 200 code', async () => {
                 const { comment } = await createRandomComment()
                 const newData = {
-                    ...comment,
+                    ...comment._doc,
                     body: faker.lorem.sentence(),
                 }
 
@@ -165,7 +165,7 @@ describe('Comment', () => {
             })
 
             it('should not find comment then create a new comment', async () => {
-                const data = { body: faker.lorem.sentence(), post: post.id }
+                const data = { body: faker.lorem.sentence(), post: post.id, commentor: user.id }
 
                 const { comment, code } = await updateOrCreateComment(randomId, { ...data })
 
