@@ -1,6 +1,7 @@
 const defaults = require("../../config/defaults")
 const { Comment, Post } = require("../../models")
 const { notFound } = require("../../utils/httpErrors")
+const { incrementCounter } = require("../counter")
 
 const createComment = async ({ body, post, commentor, status }) => {
     const postExist = await Post.findById(post)
@@ -8,6 +9,8 @@ const createComment = async ({ body, post, commentor, status }) => {
     if (!postExist) throw notFound('Post not found')
 
     const comment = await Comment.create({ body, post, commentor, status })
+
+    await incrementCounter({ parent: post, type: 'comments' })
 
     return comment
 }
@@ -18,6 +21,8 @@ const deleteComment = async (id) => {
     if (!comment) throw notFound()
 
     await comment.deleteOne()
+
+    await incrementCounter({ parent: comment.post, type: 'comments', incrementBy: -1 })
 }
 
 const findSingleComment = async (id) => {
@@ -33,16 +38,22 @@ const findAllComment = async ({
     limit = defaults.limit,
     sortType = defaults.sortType,
     sortBy = defaults.sortBy,
+    post,
 }) => {
     const sort = (sortType === 'desc' ? '-' : '') + sortBy
 
-    const comments = await Comment.find()
+    let filter = post ? { post } : undefined
+
+    const comments = await Comment.find(filter)
         .sort(sort)
         .skip((page - 1) * limit)
         .limit(limit)
 
     return comments
 }
+
+// TODO: Test this function
+const countComments = () => Comment.count()
 
 const updateOrCreateComment = async (id, { body, post, commentor, status }) => {
     let comment = await Comment.findById(id)
@@ -82,5 +93,6 @@ module.exports = {
     findSingleComment,
     findAllComment,
     updateComment,
-    updateOrCreateComment
+    updateOrCreateComment,
+    countComments
 }
