@@ -34,4 +34,44 @@ const unfollow = async ({ followee, follower }) => {
     return { code: 204 }
 }
 
-module.exports = { follow, unfollow }
+// TODO: Test this function
+const findFollowersOf = async (userId, {
+    page = defaults.page,
+    limit = defaults.limit,
+    sortType = defaults.sortType,
+    sortBy = defaults.sortBy,
+}) => {
+    const sort = (sortType === 'desc' ? '-' : '') + sortBy
+    const filter = {
+        followee: userId
+    }
+
+    const followers = await Follower.find(filter)
+        .sort(sort)
+        .skip((page - 1) * limit)
+        .limit(limit)
+
+    return followers
+}
+
+// TODO: Test this function
+const findFolloweesOf = async (userId, {
+    page = defaults.page,
+    limit = defaults.limit,
+    sortType = defaults.sortType,
+    sortBy = defaults.sortBy,
+}) => {
+    const sort = (sortType === 'desc' ? '-' : '') + sortBy
+    const filter = {
+        follower: userId
+    }
+
+    const followees = await Follower.find(filter)
+        .sort(sort)
+        .skip((page - 1) * limit)
+        .limit(limit)
+
+    return followees
+}
+
+module.exports = { follow, unfollow, findFollowersOf, findFolloweesOf }
