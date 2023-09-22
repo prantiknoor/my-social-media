@@ -605,39 +605,6 @@ paths:
                         example: "/comments?page=1&limit=10"
         "500":
           $ref: "#/components/responses/500"
-    post:
-      operationId: createComment
-      security:
-        - bearerAuth: []
-      tags: [Comment]
-      requestBody:
-        description: To create a new comment, user must need to provide valid data
-        content:
-          "application/json":
-            schema:
-              type: object
-              properties:
-                body:
-                  type: string
-                  example: A new comment
-                postId:
-                  type: integer
-                  format: int32
-                  example: 1
-              required: [body, postId]
-      responses:
-        "201":
-          description: Successfully created a new comment
-          content:
-            "application/json":
-              schema:
-                $ref: "#/components/schemas/CommentCreateDTO"
-        "400":
-          $ref: "#/components/responses/400"
-        "401":
-          $ref: "#/components/responses/401"
-        "500":
-          $ref: "#/components/responses/500"
   "/posts/{id}/comments":
     get:
       tags: [Comment]
@@ -717,7 +684,7 @@ paths:
                 body:
                   type: string
                   example: A new comment
-              required: [body, postId]
+              required: [body]
       responses:
         "201":
           description: Successfully created a new comment
