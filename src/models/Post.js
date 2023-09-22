@@ -11,7 +11,6 @@ const postSchema = new Schema(
         photo: String,
         commenting: {
             type: Boolean,
-            required: true,
             default: true
         },
         audience: {
