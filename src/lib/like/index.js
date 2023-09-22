@@ -1,3 +1,4 @@
+const defaults = require("../../config/defaults")
 const { Post, Like } = require("../../models")
 const { notFound } = require("../../utils/httpErrors")
 const { incrementCounter } = require("../counter")
@@ -31,7 +32,28 @@ const deleteLike = async ({ postId, likerId }) => {
     await incrementCounter({ parent: postId, type: 'likes', incrementBy: -1 })
 }
 
+// TODO: Test this function
+const findLikesOfPost = async (postId, {
+    page = defaults.page,
+    limit = defaults.limit,
+    sortType = defaults.sortType,
+    sortBy = defaults.sortBy,
+}) => {
+    const sort = (sortType === 'desc' ? '-' : '') + sortBy
+    const filter = {
+        post: postId
+    }
+
+    const likes = await Like.find(filter)
+        .sort(sort)
+        .skip((page - 1) * limit)
+        .limit(limit)
+
+    return likes
+}
+
 module.exports = {
     likePost,
-    deleteLike
+    deleteLike,
+    findLikesOfPost
 }
